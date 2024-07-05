@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,6 +7,11 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --bg: #00031C;
+  --text: #fff;
+  --button: linear-gradient(90deg, #6871F5 0%, #9E61FF 100%);
+  --highlight: #7B61FF;
+
 }
 
 @media (prefers-color-scheme: dark) {
@@ -16,14 +22,53 @@
   }
 }
 
+* {
+	box-sizing: border-box;
+	font-family: 'Montserrat', sans-serif;
+	color: var(--text);
+}
+
+.theme-bg {
+	background-color: var(--bg);
+}
+
+.theme-text {
+	color: var(--text);
+}
+
+.theme-button {
+	border: none;
+	padding: 0.5rem 1rem;
+	background: var(--button);
+	border-radius: 0.5rem;
+	cursor: pointer;
+}
+
+.theme-highlight {
+	color: var(--highlight);
+}
+
+.home-gradient {
+	background:
+		linear-gradient(
+			70deg,
+			rgba(0, 0, 0, 0) 0%,
+			rgba(0, 0, 0, 1) 100%
+		),
+		linear-gradient(
+			250deg,
+			rgba(0, 0, 0, 0) 0%,
+			rgba(0, 0, 0, 1) 100%
+		)
+		;
+}
+
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+	width: 100dvw;
+	height: 100dvh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 @layer utilities {
