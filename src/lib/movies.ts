@@ -1,7 +1,7 @@
 // Type: Service
 // Description: This file contains the service for movies.
 
-import type { MovieResult, FeaturedMovie, Person, Error } from "./interfaces";
+import type { MovieResult, MovieDetails, FeaturedMovie, Person, Error } from "./interfaces";
 //import { secret } from "@aws-amplify/backend";
 
 // Takes no arguments
@@ -68,4 +68,66 @@ export async function getLatestMovies(): Promise<MovieResult[] | Error> {
 	// End of placeholder
 
 	return returnMovies;
+}
+
+export async function getMovieDetails(movieId: string): Promise<MovieDetails | undefined> {
+	try {
+		const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=efe0d01423f29d0dd19e4a7e482b217b`)
+		const data = await res.json();
+		if (!data) {
+			return undefined;
+		}
+		let movieHours = Math.floor(data.runtime/60);
+		let movieMinutes = data.runtime % 60;
+		const movie: MovieDetails = {
+			id: data.id,
+			title: data.original_title,
+			poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
+			year: data.release_date,
+			length: `${movieHours}h ${movieMinutes}m`,
+			genres: ["Unavailable"],
+			synopsis: data.overview,
+			cast: [
+				{
+					name: "Person 1",
+					role: "Character 1",
+					image: `https://image.tmdb.org/t/p/w500${data.poster_path}`
+				},
+				{
+					name: "Person 2",
+					role: "Character 2",
+					image: `https://image.tmdb.org/t/p/w500${data.poster_path}`
+				},
+				{
+					name: "Person 3",
+					role: "Character 3",
+					image: `https://image.tmdb.org/t/p/w500${data.poster_path}`
+				}
+			],
+			crew: [
+				{
+					name: "Person 1",
+					role: "Character 1",
+					image: `https://image.tmdb.org/t/p/w500${data.poster_path}`
+				},
+				{
+					name: "Person 2",
+					role: "Character 2",
+					image: `https://image.tmdb.org/t/p/w500${data.poster_path}`
+				},
+				{
+					name: "Person 3",
+					role: "Character 3",
+					image: `https://image.tmdb.org/t/p/w500${data.poster_path}`
+				}
+			],
+			rating: data.vote_average,
+			rentedBy: [
+			],
+		};
+		return movie;
+	} catch (err) {
+		console.log(err);
+		return undefined;
+	}
 }

@@ -8,6 +8,7 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
   --bg: #00031C;
+  --bg-secondary: #191C33;
   --text: #fff;
   --button: linear-gradient(90deg, #6871F5 0%, #9E61FF 100%);
   --highlight: #7B61FF;
@@ -32,6 +33,10 @@
 	background-color: var(--bg);
 }
 
+.theme-bg-secondary {
+	background-color: var(--bg-secondary);
+}
+
 .theme-text {
 	color: var(--text);
 }
@@ -46,6 +51,10 @@
 
 .theme-highlight {
 	color: var(--highlight);
+}
+
+.theme-highlight-bg {
+	background-color: var(--highlight);
 }
 
 .home-gradient {
@@ -69,6 +78,17 @@ body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.hide-scrollbar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+	display: none;
+	width: 0;
+	height: 0;
 }
 
 @layer utilities {

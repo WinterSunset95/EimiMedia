@@ -21,6 +21,29 @@ export interface MovieResult {
 	genres: string[];
 }
 
+export interface User {
+	id: string;
+	name: string;
+	poster: string;
+	email: string;
+	rentedMovies: MovieDetails[];
+	groups: string[];
+}
+
+export interface MovieDetails {
+	id: string;
+	title: string;
+	poster: string;
+	year: string;
+	length: string;
+	genres: string[];
+	synopsis: string;
+	cast: Person[];
+	crew: Person[];
+	rating: string;
+	rentedBy: User[];
+}
+
 export interface Error {
 	message: string;
 }

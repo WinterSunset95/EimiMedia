@@ -1,7 +1,6 @@
 import type { MovieResult, Error } from "../lib/interfaces"
 import { useState, useEffect } from "react"
 import { getLatestMovies } from "../lib/movies"
-import styles from './Latest.module.css'
 
 export default function Latest() {
 	const [latest, setLatest] = useState<MovieResult[]>()
@@ -44,22 +43,20 @@ export default function Latest() {
 
 	// We get results
 	const Results = latest.map((movie, index) => (
-		<div className="flex flex-col gap-2 snap-start snap-mandatory" key={index}>
-			<div className={styles.imageContainer}>
-				<img src={movie.poster} alt={movie.title} />
+		<a href={`/movie/${movie.id}`} className="flex flex-col gap-2 snap-start snap-mandatory transition-all hover:scale-105" key={index}>
+			<div className="w-[15rem] aspect-[2/3] overflow-hidden rounded-md">
+				<img className="w-full h-full object-cover" src={movie.poster} alt={movie.title} />
 			</div>
-			<div className={styles.content}>
-				<h1>{movie.title}</h1>
+			<div className="flex flex-col">
+				<h1 className="my-2">{movie.title}</h1>
+				<p><span className="theme-highlight">Released: </span>{movie.year}</p>
 			</div>
-		</div>
+		</a>
 	))
 
 	return (
-		<main className="flex flex-col p-6 w-full">
-			<h1>Latest Movies</h1>
-			<div className="flex flex-row flex-nowrap w-full overflow-x-scroll gap-4 snap-x snap-mandatory">
-				{Results}
-			</div>
-		</main>
+		<div className="flex flex-row flex-nowrap w-full overflow-x-scroll gap-4 py-4 snap-x snap-mandatory">
+			{Results}
+		</div>
 	)
 }

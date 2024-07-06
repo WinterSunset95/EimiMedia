@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-
+import AuthContext from "@/components/AuthContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,7 +14,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="theme-bg">{children}</body>
+      <body className="theme-bg">
+	  <AuthContext>
+		  {children}
+	  </AuthContext>
+	  </body>
     </html>
   );
 }

@@ -1,36 +1,34 @@
 import { TablerSearch } from "./Search";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 const UserSignedIn = (props:{ uname: string }) => {
-
 	return (
-		<div className="theme-button">
-			<a href="#">{props.uname}</a>
-		</div>
+		<button onClick={() => signOut()} className="theme-button">
+			{props.uname}
+		</button>
 	)
 }
 
 const UserSignedOut = () => {
 	return (
-		<div className="theme-button">
-			<a href="/signin">Sign In</a>
-		</div>
+		<button onClick={() => signIn("cognito")} className="theme-button">
+			Sign In
+		</button>
 	)
 }
 
 export default function Nav() {
 	const [username, setUsername] = useState("");
 	const [nav, setNav] = useState(true);
+	const { data: session, status } = useSession();
 
-	async function userStatus() {
-		try {
-			const user = false
-			if (user) {
-				setUsername("User")
-			}
-			console.log(user);
-		} catch (err) {
-			console.log(err);
+	function userStatus() {
+		if (status == "authenticated") {
+			setUsername(session.user?.email || "")
+			alert("User signed in")
+		} else {
+			alert("User not signed in")
 		}
 	}
 
@@ -40,15 +38,18 @@ export default function Nav() {
 	}
 
 	useEffect(() => {
-		userStatus();
+		userStatus()
+	}, [status])
+
+	useEffect(() => {
 		window.addEventListener('scroll', (e) => {
 			windowScroll(e)
 		})
 	}, [])
 
 	return (
-		<nav className={`w-full flex flex-row justify-between items-center p-6 fixed top-0 right-0 z-40 bg-transparent transition-all ${nav ? "" : "-translate-y-20"}`}>
-			<h1 className="text-2xl font-bold">EimiMedia</h1>
+		<nav className={`w-full flex flex-row justify-between items-center p-4 fixed top-0 right-0 z-40 theme-bg-secondary transition-all ${nav ? "" : "-translate-y-20"}`}>
+			<h1 className="text-2xl font-bold"> <a href="/"> EimiMedia </a> </h1>
 			<ul className="flex gap-2">
 				<li><a className="hover:theme-highlight" href="">Songs</a></li>
 				<li><a className="hover:theme-highlight" href="">Gospel Songs</a></li>
@@ -59,7 +60,7 @@ export default function Nav() {
 				<div className="p-4">
 					<TablerSearch />
 				</div>
-				<input className="bg-transparent p-2 focus:outline-none" type="text" placeholder="Search"/>
+				<input className="bg-transparent p-1 focus:outline-none" type="text" placeholder="Search"/>
 			</div>
 			<div>
 				{username != "" ? <UserSignedIn uname={username} /> : <UserSignedOut />}
