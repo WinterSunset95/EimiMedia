@@ -23,12 +23,22 @@ export default function Nav() {
 	const [nav, setNav] = useState(true);
 	const { data: session, status } = useSession();
 
-	function userStatus() {
+	async function userStatus() {
 		if (status == "authenticated") {
-			setUsername(session.user?.email || "")
-			alert("User signed in")
-		} else {
-			alert("User not signed in")
+			setUsername(session.user?.name || "")
+			//const res = await fetch(`/api/putuser`, {
+			//	method: "POST",
+			//	headers: {
+			//		"Content-Type": "application/json"
+			//	},
+			//	body: JSON.stringify({
+			//		name: session.user?.name,
+			//		email: session.user?.email,
+			//		eimimedia: session.user?.email
+			//	})
+			//})
+			//const data = await res.json()
+			//console.log(data)
 		}
 	}
 

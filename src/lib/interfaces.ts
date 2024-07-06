@@ -1,3 +1,5 @@
+import { type } from "os";
+
 export interface Person {
 	name: string;
 	role: string;
@@ -47,3 +49,11 @@ export interface MovieDetails {
 export interface Error {
 	message: string;
 }
+
+export type UserPost = {
+	name: string;
+	email: string;
+	image: string;
+	eimimedia: string;
+}
+
