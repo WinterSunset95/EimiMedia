@@ -15,10 +15,7 @@ export default function Home() {
 	<main className="w-full h-full relative overflow-scroll">
 		<Nav />
 		<Featured />
-		<section className="flex flex-col gap-4 p-6">
-			<h1 className="font-bold text-4xl">Latest additions</h1>
-			<Latest />
-		</section>
+		<Latest />
 		<Footer />
 	</main>
 	</>

@@ -1,7 +1,7 @@
 // Type: Service
 // Description: This file contains the service for movies.
 
-import type { MovieResult, MovieDetails, FeaturedMovie, Person, Error } from "./interfaces";
+import type { MovieResult, FeaturedMovie, Person, Error } from "./interfaces";
 //import { secret } from "@aws-amplify/backend";
 
 // Takes no arguments
@@ -57,6 +57,9 @@ export async function getLatestMovies(): Promise<MovieResult[] | Error> {
 				poster: `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`,
 				length: "Unavailable",
 				genres: ["Unavailable"],
+				synopsis: movie.overview ? movie.overview : "Unavailable",
+				price: 0,
+				cast: []
 			};
 			returnMovies.push(movieData);
 		});
@@ -70,7 +73,9 @@ export async function getLatestMovies(): Promise<MovieResult[] | Error> {
 	return returnMovies;
 }
 
-export async function getMovieDetails(movieId: string): Promise<MovieDetails | undefined> {
+// Takes ID of a movie as an argument
+// Returns a promise that resolves to a MovieDetails
+export async function getMovieDetails(movieId: string): Promise<MovieResult | undefined> {
 	try {
 		const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=efe0d01423f29d0dd19e4a7e482b217b`)
 		const data = await res.json();
@@ -79,7 +84,7 @@ export async function getMovieDetails(movieId: string): Promise<MovieDetails | u
 		}
 		let movieHours = Math.floor(data.runtime/60);
 		let movieMinutes = data.runtime % 60;
-		const movie: MovieDetails = {
+		const movie: MovieResult = {
 			id: data.id,
 			title: data.original_title,
 			poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
@@ -121,13 +126,45 @@ export async function getMovieDetails(movieId: string): Promise<MovieDetails | u
 					image: `https://image.tmdb.org/t/p/w500${data.poster_path}`
 				}
 			],
-			rating: data.vote_average,
-			rentedBy: [
-			],
+			rating: data.vote_average ? data.vote_average : 0,
+			price: 0,
+			reviewers: data.vote_count ? data.vote_count : 0
 		};
 		return movie;
 	} catch (err) {
 		console.log(err);
 		return undefined;
+	}
+}
+
+export async function movieSearch(query: string): Promise<MovieResult[]> {
+	const movies: MovieResult[] = [];
+	try {
+		const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=efe0d01423f29d0dd19e4a7e482b217b&query=${query}`)
+		const data = await res.json();
+		if (!data.results) {
+			return [];
+		}
+
+		data.results.forEach((movie: any) => {
+			let movieData: MovieResult = {
+				id: movie.id,
+				title: movie.original_title,
+				year: movie.release_date,
+				poster: `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`,
+				length: "Unavailable",
+				genres: [],
+				cast: [],
+				crew: [],
+				rating: movie.vote_average,
+				synopsis: movie.overview,
+				price: 0
+			}
+			movies.push(movieData);
+		})
+		return movies;
+
+	} catch (err) {
+		return [];
 	}
 }

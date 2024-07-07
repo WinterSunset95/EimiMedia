@@ -14,36 +14,29 @@ export interface FeaturedMovie<T> {
 	synopsis: string;
 }
 
-export interface MovieResult {
+export type MovieResult = {
 	id: string;
 	title: string;
-	year: number;
 	poster: string;
-	length: string;
-	genres: string[];
+	price: number;
+	year?: number;
+	length?: string;
+	synopsis?: string;
+	genres?: string[];
+	cast?: Person[];
+	crew?: Person[];
+	rating?: string;
+	reviewers?: number;
 }
 
 export interface User {
-	id: string;
+	eimimedia: string;
 	name: string;
-	poster: string;
+	given_name: string;
 	email: string;
-	rentedMovies: MovieDetails[];
+	image: string;
 	groups: string[];
-}
-
-export interface MovieDetails {
-	id: string;
-	title: string;
-	poster: string;
-	year: string;
-	length: string;
-	genres: string[];
-	synopsis: string;
-	cast: Person[];
-	crew: Person[];
-	rating: string;
-	rentedBy: User[];
+	rentedMovies: string[];
 }
 
 export interface Error {

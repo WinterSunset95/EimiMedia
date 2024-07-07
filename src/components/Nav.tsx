@@ -1,6 +1,8 @@
 import { TablerSearch } from "./Search";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 const UserSignedIn = (props:{ uname: string }) => {
 	return (
@@ -22,6 +24,8 @@ export default function Nav() {
 	const [username, setUsername] = useState("");
 	const [nav, setNav] = useState(true);
 	const { data: session, status } = useSession();
+	const [query, setQuery] = useState("");
+	const [expanded, setExpanded] = useState(false);
 
 	async function userStatus() {
 		if (status == "authenticated") {
@@ -58,22 +62,28 @@ export default function Nav() {
 	}, [])
 
 	return (
-		<nav className={`w-full flex flex-row justify-between items-center p-4 fixed top-0 right-0 z-40 theme-bg-secondary transition-all ${nav ? "" : "-translate-y-20"}`}>
-			<h1 className="text-2xl font-bold"> <a href="/"> EimiMedia </a> </h1>
-			<ul className="flex gap-2">
-				<li><a className="hover:theme-highlight" href="">Songs</a></li>
-				<li><a className="hover:theme-highlight" href="">Gospel Songs</a></li>
-				<li><a className="hover:theme-highlight" href="">Short Films</a></li>
-				<li><a className="hover:theme-highlight" href="">Movies</a></li>
-			</ul>
-			<div className="flex flex-row gap-2 items-center border border-1 rounded-md">
-				<div className="p-4">
-					<TablerSearch />
-				</div>
-				<input className="bg-transparent p-1 focus:outline-none" type="text" placeholder="Search"/>
+		<nav className={`w-full flex flex-col md:flex-row ${expanded ? "gap-3" : "gap-0"} md:gap-6 justify-between items-center p-2 md:p-4 fixed top-0 right-0 z-40 theme-bg-secondary transition-all ${nav ? "" : "-translate-y-20"}`}>
+			<div className="grow flex flex-row justify-between items-center w-full md:w-auto">
+				<h1 className="text-xl md:text-2xl font-bold"> <a href="/"> EimiMedia </a> </h1>
+				<ul className="flex gap-2">
+					<li><a className="hover:theme-highlight text-sm" href="">Songs</a></li>
+					<li><a className="hover:theme-highlight text-sm" href="">Short Films</a></li>
+					<li><a className="hover:theme-highlight text-sm" href="">Movies</a></li>
+				</ul>
+				<button className="md:hidden" onClick={() => setExpanded(!expanded)}>
+					<FontAwesomeIcon className="w-6 h-6" icon={faBars} />
+				</button>
 			</div>
-			<div>
-				{username != "" ? <UserSignedIn uname={username} /> : <UserSignedOut />}
+			<div className={`grow flex flex-row justify-between items-center w-full md:w-auto md:h-full ${expanded ? "h-full" : "h-0 overflow-hidden" }`}>
+				<form action={`/search/${query}`} className="flex flex-row gap-2 items-center border border-1 rounded-md">
+					<div className="p-2 md:p-4">
+						<TablerSearch />
+					</div>
+					<input value={query} onChange={(e) => setQuery(e.target.value)} className="bg-transparent p-1 focus:outline-none" type="text" placeholder="Search"/>
+				</form>
+				<div>
+					{username != "" ? <UserSignedIn uname={username} /> : <UserSignedOut />}
+				</div>
 			</div>
 		</nav>
 	)

@@ -1,6 +1,7 @@
 import type { MovieResult, Error } from "../lib/interfaces"
 import { useState, useEffect } from "react"
 import { getLatestMovies } from "../lib/movies"
+import CarouselList from "./CarouselList"
 
 export default function Latest() {
 	const [latest, setLatest] = useState<MovieResult[]>()
@@ -41,22 +42,10 @@ export default function Latest() {
 		)
 	}
 
-	// We get results
-	const Results = latest.map((movie, index) => (
-		<a href={`/movie/${movie.id}`} className="flex flex-col gap-2 snap-start snap-mandatory transition-all hover:scale-105" key={index}>
-			<div className="w-[15rem] aspect-[2/3] overflow-hidden rounded-md">
-				<img className="w-full h-full object-cover" src={movie.poster} alt={movie.title} />
-			</div>
-			<div className="flex flex-col">
-				<h1 className="my-2">{movie.title}</h1>
-				<p><span className="theme-highlight">Released: </span>{movie.year}</p>
-			</div>
-		</a>
-	))
-
 	return (
-		<div className="flex flex-row flex-nowrap w-full overflow-x-scroll gap-4 py-4 snap-x snap-mandatory">
-			{Results}
+		<div className="p-6">
+			<h1 className="my-4 font-bold text-4xl">Latest Movies</h1>
+			<CarouselList data={latest} />
 		</div>
 	)
 }

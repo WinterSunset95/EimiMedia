@@ -43,10 +43,16 @@
 
 .theme-button {
 	border: none;
-	padding: 0.5rem 1rem;
+	padding: 0.3rem 0.75rem;
 	background: var(--button);
 	border-radius: 0.5rem;
 	cursor: pointer;
+}
+
+@media screen and (min-width: 768px) {
+	.theme-button {
+		padding: 0.5rem 1rem;
+	}
 }
 
 .theme-highlight {
