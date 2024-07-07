@@ -5,6 +5,7 @@
 // Calls: getMovieDetails, Latest, ReviewForm, Reviews
 
 import type { MovieResult } from "@/lib/interfaces"
+import { useSession } from "next-auth/react"
 import { getMovieDetails } from "@/lib/movies"
 import { useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -13,18 +14,18 @@ import Latest from "./Latest"
 import ReviewForm from "./ReviewForm"
 import Reviews from "./Reviews"
 
-export default function MovieDetails(props: {movieId: string}) {
+export default function MovieDetails(props: {movieId: string, permissions: boolean}) {
 	const [details, setDetails] = useState<MovieResult>()
 
 	async function initialLoad() {
 		const data = await getMovieDetails(props.movieId)
 		if (!data) {
-			// handle error
 			console.error("Error fetching movie details")
 			return
 		}
 		setDetails(data)
 	}
+
 
 	useEffect(() => {
 		initialLoad()
@@ -50,7 +51,11 @@ export default function MovieDetails(props: {movieId: string}) {
 					<button className="theme-button w-1/3" >Share</button>
 					<button className="theme-button w-1/3" >Watchlist</button>
 				</div>
-				<button className="theme-button w-full">Rent for {details.price}</button>
+				{props.permissions ? 
+				<button className="theme-button w-full">You rented this movie</button>
+				:
+				<button className="theme-button w-full">Rent for Rs. {details.price}</button>
+				}
 			</div>
 
 			<div className="w-full md:h-[50rem] md:w-9/12 overflow-auto scroll-smooth hide-scrollbar">

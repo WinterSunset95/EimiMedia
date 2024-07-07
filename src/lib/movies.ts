@@ -127,7 +127,7 @@ export async function getMovieDetails(movieId: string): Promise<MovieResult | un
 				}
 			],
 			rating: data.vote_average ? data.vote_average : 0,
-			price: 0,
+			price: 1,
 			reviewers: data.vote_count ? data.vote_count : 0
 		};
 		return movie;

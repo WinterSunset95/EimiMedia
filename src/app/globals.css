@@ -47,6 +47,12 @@
 	background: var(--button);
 	border-radius: 0.5rem;
 	cursor: pointer;
+	transition: all 0.3s;
+}
+
+.theme-button:hover {
+	filter: brightness(1.1);
+	transform: scale(1.01);
 }
 
 @media screen and (min-width: 768px) {

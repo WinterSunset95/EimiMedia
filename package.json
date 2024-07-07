@@ -19,6 +19,7 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "next": "14.2.4",
     "next-auth": "^4.24.7",
+    "razorpay": "^2.9.4",
     "react": "^18",
     "react-dom": "^18"
   },

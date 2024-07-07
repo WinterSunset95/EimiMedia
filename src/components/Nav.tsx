@@ -65,17 +65,17 @@ export default function Nav() {
 		<nav className={`w-full flex flex-col md:flex-row ${expanded ? "gap-3" : "gap-0"} md:gap-6 justify-between items-center p-2 md:p-4 fixed top-0 right-0 z-40 theme-bg-secondary transition-all ${nav ? "" : "-translate-y-20"}`}>
 			<div className="grow flex flex-row justify-between items-center w-full md:w-auto">
 				<h1 className="text-xl md:text-2xl font-bold"> <a href="/"> EimiMedia </a> </h1>
-				<ul className="flex gap-2">
-					<li><a className="hover:theme-highlight text-sm" href="">Songs</a></li>
-					<li><a className="hover:theme-highlight text-sm" href="">Short Films</a></li>
-					<li><a className="hover:theme-highlight text-sm" href="">Movies</a></li>
+				<ul className="grow md:grow-0 flex gap-2 md:gap-6 justify-center">
+					<li><a className="hover:theme-highlight text-sm md:text-xl" href="">Songs</a></li>
+					<li><a className="hover:theme-highlight text-sm md:text-xl" href="">Short Films</a></li>
+					<li><a className="hover:theme-highlight text-sm md:text-xl" href="">Movies</a></li>
 				</ul>
 				<button className="md:hidden" onClick={() => setExpanded(!expanded)}>
 					<FontAwesomeIcon className="w-6 h-6" icon={faBars} />
 				</button>
 			</div>
-			<div className={`grow flex flex-row justify-between items-center w-full md:w-auto md:h-full ${expanded ? "h-full" : "h-0 overflow-hidden" }`}>
-				<form action={`/search/${query}`} className="flex flex-row gap-2 items-center border border-1 rounded-md">
+			<div className={`grow flex flex-row justify-between md:justify-end gap-6 items-center w-full md:w-auto md:h-full ${expanded ? "h-full" : "h-0 overflow-hidden" }`}>
+				<form action={`/search/${query}`} className="grow md:grow-0 md:w-1/2 flex flex-row gap-2 items-center border border-1 rounded-md">
 					<div className="p-2 md:p-4">
 						<TablerSearch />
 					</div>
