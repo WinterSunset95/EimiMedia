@@ -27,9 +27,6 @@ export async function showRazorPay(order: Orders.RazorpayOrder, url: string) {
 		"image": "/images/logo.png",
 		"order_id": order.id!,
 		"handler": async (response: any) => {
-			alert(response.razorpay_payment_id);
-			alert(response.razorpay_order_id);
-			alert(response.razorpay_signature);
 			const res = await fetch("/api/verify", {
 				method: "POST",
 				headers: {
@@ -39,7 +36,7 @@ export async function showRazorPay(order: Orders.RazorpayOrder, url: string) {
 			})
 			const data = await res.json();
 			if (data.success) {
-				alert("Payment successful");
+				alert("Payment successful, trying to rent movie.");
 				window.location.replace(url);
 			} else {
 				alert("Payment failed");

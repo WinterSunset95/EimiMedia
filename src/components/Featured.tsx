@@ -1,5 +1,6 @@
 import type { FeaturedMovie, Person, Error } from "../lib/interfaces"
-import Play from "./Play"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faPlay } from "@fortawesome/free-solid-svg-icons"
 import { getFeaturedMovie } from "../lib/movies"
 
 import { useEffect, useState } from "react"
@@ -37,10 +38,10 @@ export default function Featured() {
 					))}
 				</div>
 				<div className="flex flex-row">
-					<button className="theme-button flex flex-row justify-center items-center gap-2">
+					<a href="/movie/603692" className="theme-button flex flex-row justify-center items-center gap-2">
 						<span>Play Now</span>
-						<Play />
-					</button>
+						<FontAwesomeIcon icon={faPlay} />
+					</a>
 				</div>
 			</div>
 			<div className="absolute -z-20 w-full h-full top-0 left-0 flex justify-center items-center overflow-hidden">
