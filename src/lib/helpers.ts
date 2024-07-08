@@ -45,6 +45,7 @@ export async function showRazorPay(order: Orders.RazorpayOrder, url: string) {
 		}
 	}
 
-	const paymentObject = new window.Razorpay(options);
+	const paymentObject = new (window as any).Razorpay(options);
+
 	paymentObject.open();
 }
