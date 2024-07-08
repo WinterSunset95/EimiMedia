@@ -15,6 +15,7 @@ export default function MoviePage({ params }: { params: {movieId: string}} ) {
 			setPermitted(false)
 			return
 		}
+
 		const userEmail = session?.user?.email!
 		const res = await fetch(`/api/moviepermission`, {
 			method: "POST",

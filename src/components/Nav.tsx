@@ -1,59 +1,18 @@
-import { TablerSearch } from "./Search";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
-
-const UserSignedIn = (props:{ uname: string }) => {
-	return (
-		<button onClick={() => signOut()} className="theme-button">
-			{props.uname}
-		</button>
-	)
-}
-
-const UserSignedOut = () => {
-	return (
-		<button onClick={() => signIn("cognito")} className="theme-button">
-			Sign In
-		</button>
-	)
-}
+import { faBars, faSearch } from "@fortawesome/free-solid-svg-icons";
 
 export default function Nav() {
-	const [username, setUsername] = useState("");
 	const [nav, setNav] = useState(true);
 	const { data: session, status } = useSession();
 	const [query, setQuery] = useState("");
 	const [expanded, setExpanded] = useState(false);
 
-	async function userStatus() {
-		if (status == "authenticated") {
-			setUsername(session.user?.name || "")
-			//const res = await fetch(`/api/putuser`, {
-			//	method: "POST",
-			//	headers: {
-			//		"Content-Type": "application/json"
-			//	},
-			//	body: JSON.stringify({
-			//		name: session.user?.name,
-			//		email: session.user?.email,
-			//		eimimedia: session.user?.email
-			//	})
-			//})
-			//const data = await res.json()
-			//console.log(data)
-		}
-	}
-
 	function windowScroll(e:Event) {
 		console.log(document.body.scrollTop)
 		console.log("Scroll event")
 	}
-
-	useEffect(() => {
-		userStatus()
-	}, [status])
 
 	useEffect(() => {
 		window.addEventListener('scroll', (e) => {
@@ -77,12 +36,18 @@ export default function Nav() {
 			<div className={`grow flex flex-row justify-between md:justify-end gap-6 items-center w-full md:w-auto md:h-full ${expanded ? "h-full" : "h-0 overflow-hidden" }`}>
 				<form action={`/search/${query}`} className="grow md:grow-0 md:w-1/2 flex flex-row gap-2 items-center border border-1 rounded-md">
 					<div className="p-2 md:p-4">
-						<TablerSearch />
+						<FontAwesomeIcon icon={faSearch} />
 					</div>
 					<input value={query} onChange={(e) => setQuery(e.target.value)} className="bg-transparent p-1 focus:outline-none" type="text" placeholder="Search"/>
 				</form>
 				<div>
-					{username != "" ? <UserSignedIn uname={username} /> : <UserSignedOut />}
+					{status == "loading" ? 
+						<button disabled>Loading . . .</button>
+					: status == "authenticated" ?
+					<button onClick={() => signOut()} className="theme-button">{session.user ? session.user.name ? session.user.name : session.user.email : "Unknown User"}</button>
+					:
+					<button onClick={() => signIn("cognito")} className="theme-button">Sign In</button>
+					}
 				</div>
 			</div>
 		</nav>

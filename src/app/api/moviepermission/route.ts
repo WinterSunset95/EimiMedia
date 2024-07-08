@@ -1,5 +1,5 @@
 import { docClient } from "@/lib/db"
-import { QueryCommand } from "@aws-sdk/client-dynamodb"
+import { QueryCommand, GetItemCommand } from "@aws-sdk/client-dynamodb"
 import { User } from "@/lib/interfaces"
 import { permission } from "process"
 
@@ -13,30 +13,24 @@ async function handler(req:Request) {
 		return new Response("No email and password", { status: 400 })
 	}
 
-	const query = new QueryCommand({
+	const query = new GetItemCommand({
 		TableName: "EimiMediaUsers",
-		IndexName: "email-index",
-		KeyConditionExpression: "email = :v_email",
-		ExpressionAttributeValues: {
-			":v_email": { S: body.email },
-		},
-		ScanIndexForward: false,
+		Key: {
+			email: { S: body.email },
+		}
 	})
 
 	try {
 		const data = await docClient.send(query)
-		if (!data.Items) {
+		if (!data.Item) {
 			return new Response("No data", { status: 404 })
-		}
-		if (data.Items?.length === 0) {
-			return new Response("No user found", { status: 404 })
 		}
 
 		// So we have a user, let's check if movieId is a part of the user's rentedMovies list
-		const user = data.Items[0]
+		const user = data.Item
 
 		const typedUser: User = {
-			eimimedia: user.eimimedia.S!,
+			userId: user.userId.S!,
 			name: user.name.S!,
 			given_name: user.given_name.S!,
 			email: user.email.S!,

@@ -4,8 +4,9 @@
 // Called in: /movie/[movieId]
 // Calls: getMovieDetails, Latest, ReviewForm, Reviews
 
-import type { MovieResult } from "@/lib/interfaces"
-import { useSession } from "next-auth/react"
+import type { MovieResult, RazorPayOrderError, RazorPayOrderResponse, RazorPayOrder, RazorPayVerifyResponse } from "@/lib/interfaces"
+import { showRazorPay } from "@/lib/helpers"
+import { useSession, signIn } from "next-auth/react"
 import { getMovieDetails } from "@/lib/movies"
 import { useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -13,9 +14,12 @@ import { faEye, faStar, faMessage, faThumbsUp, faPlusSquare } from "@fortawesome
 import Latest from "./Latest"
 import ReviewForm from "./ReviewForm"
 import Reviews from "./Reviews"
+import { Orders } from "razorpay/dist/types/orders"
+import { INormalizeError } from "razorpay/dist/types/api"
 
 export default function MovieDetails(props: {movieId: string, permissions: boolean}) {
 	const [details, setDetails] = useState<MovieResult>()
+	const { data: session, status } = useSession()
 
 	async function initialLoad() {
 		const data = await getMovieDetails(props.movieId)
@@ -26,10 +30,10 @@ export default function MovieDetails(props: {movieId: string, permissions: boole
 		setDetails(data)
 	}
 
-
 	useEffect(() => {
 		initialLoad()
 	}, [])
+
 
 	if (!details) {
 		return (
@@ -37,6 +41,43 @@ export default function MovieDetails(props: {movieId: string, permissions: boole
 				<h1>Loading . . . </h1>
 			</section>
 		)
+	}
+
+	async function buyMovie() {
+		if (status != "authenticated") {
+			console.error("User not authenticated")
+			return
+		}
+		if (!details) {
+			console.error("Movie details not loaded")
+			return
+		}
+		const razorOrder: RazorPayOrder = {
+			amount: details.price,
+			currency: "INR",
+			orderType: "movie",
+			orderId: props.movieId,
+		}
+
+		const response = await fetch("/api/order", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(razorOrder)
+		})
+
+		const data: Orders.RazorpayOrder | INormalizeError = await response.json()
+		if ("error" in data) {
+			console.error(data.error)
+			return
+		}
+
+		console.log(data)
+
+		// Redirect to payment gateway
+		const razorPayCheckout = await showRazorPay(data, `/api/addmovie?userEmail=${session!.user!.email}&movieId=${props.movieId}&redirectUrl=${window.location.href}`)
+		console.log(razorPayCheckout)
 	}
 
 	return (
@@ -51,10 +92,14 @@ export default function MovieDetails(props: {movieId: string, permissions: boole
 					<button className="theme-button w-1/3" >Share</button>
 					<button className="theme-button w-1/3" >Watchlist</button>
 				</div>
-				{props.permissions ? 
+				{status == "unauthenticated" ? 
+				<button className="theme-button w-full" onClick={() => signIn()}>SignIn to watch</button>
+				: status == "loading" ?
+				<button className="theme-button w-full">Loading . . .</button>
+				: props.permissions ? 
 				<button className="theme-button w-full">You rented this movie</button>
 				:
-				<button className="theme-button w-full">Rent for Rs. {details.price}</button>
+				<button className="theme-button w-full" onClick={() => buyMovie()}>Rent for Rs. {details.price/100}</button>
 				}
 			</div>
 

@@ -58,7 +58,7 @@ export async function getLatestMovies(): Promise<MovieResult[] | Error> {
 				length: "Unavailable",
 				genres: ["Unavailable"],
 				synopsis: movie.overview ? movie.overview : "Unavailable",
-				price: 0,
+				price: 100,
 				cast: []
 			};
 			returnMovies.push(movieData);
@@ -127,7 +127,7 @@ export async function getMovieDetails(movieId: string): Promise<MovieResult | un
 				}
 			],
 			rating: data.vote_average ? data.vote_average : 0,
-			price: 1,
+			price: 100,
 			reviewers: data.vote_count ? data.vote_count : 0
 		};
 		return movie;
@@ -158,7 +158,7 @@ export async function movieSearch(query: string): Promise<MovieResult[]> {
 				crew: [],
 				rating: movie.vote_average,
 				synopsis: movie.overview,
-				price: 0
+				price: 100
 			}
 			movies.push(movieData);
 		})

@@ -30,7 +30,7 @@ export type MovieResult = {
 }
 
 export interface User {
-	eimimedia: string;
+	userId: string;
 	name: string;
 	given_name: string;
 	email: string;
@@ -50,3 +50,41 @@ export type UserPost = {
 	eimimedia: string;
 }
 
+export type RazorPayOrderResponse = {
+  id: string,
+  entity?: string,
+  amount?: number,
+  amount_paid?: number,
+  amount_due?: number,
+  currency: string,
+  receipt?: string,
+  status?: string,
+  attempts?: number,
+  notes?: any[],
+  created_at?: number
+}
+
+export type RazorPayVerifyResponse = {
+	razorpay_order_id: string,
+	razorpay_payment_id: string,
+	razorpay_signature: string
+}
+
+export type RazorPayOrderError = {
+	error: {
+		code: string,
+		description: string,
+		source: string,
+		step: string,
+		reason: string,
+		metadata: {},
+		field: string
+	}
+}
+
+export type RazorPayOrder = {
+	amount: number,
+	currency: string,
+	orderType: string,
+	orderId: string,
+}

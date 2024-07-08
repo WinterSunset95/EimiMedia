@@ -15,19 +15,18 @@ export default function MovieWatch(props: {movieId: string, permissions: boolean
 	}
 
 	const Embeds = () => {
-		// Uncomment later
-		//if (!props.permissions) {
-		//	return (
-		//		<iframe title="Watch"
-		//		src={`https://vidsrc.icu/embed/movie/hiadfevhsdfeihg`}
-		//		referrerPolicy="origin"
-		//		allowFullScreen
-		//		width="1000"
-		//		height="450"
-		//		scrolling="no"
-		//		/>
-		//	)
-		//}
+		if (!props.permissions) {
+			return (
+				<iframe title="Watch"
+				src={`https://vidsrc.icu/embed/movie/hiadfevhsdfeihg`}
+				referrerPolicy="origin"
+				allowFullScreen
+				width="1000"
+				height="450"
+				scrolling="no"
+				/>
+			)
+		}
 
 		if (source === "vidsrc") {
 			return (
@@ -89,7 +88,7 @@ export default function MovieWatch(props: {movieId: string, permissions: boolean
 
 	return (
 		<div className="w-full h-full flex flex-col items-center gap-4 relative">
-			{/* !props.permissions && <Paywall /> */}
+			{!props.permissions && <Paywall />}
 			<Embeds />
 			<select className="theme-button" value={source} onChange={(e) => setSource(e.target.value)} name="Sources" id="source">
 				<option value="vidsrc">VidSrc</option>
