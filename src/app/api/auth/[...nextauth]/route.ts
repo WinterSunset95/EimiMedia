@@ -1,6 +1,5 @@
 import NextAuth from 'next-auth';
 import CognitoProvider from 'next-auth/providers/cognito';
-import GoogleProvider from 'next-auth/providers/google';
 
 const handler = NextAuth({
 	providers: [
@@ -10,6 +9,7 @@ const handler = NextAuth({
 			issuer: process.env.COGNITO_ISSUER!,
 		})
 	],
+	secret: process.env.NEXT_AUTH_SECRET,
 })
 
 export { handler as GET, handler as POST }
