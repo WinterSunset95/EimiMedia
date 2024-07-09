@@ -1,8 +1,48 @@
+'use client'
+import { useSession } from "next-auth/react"
+import { useEffect, useState } from "react"
+import { getUserPermissions } from "@/lib/admin"
+import AdminMovie from "@/components/AdminMovie"
+import AdminSong from "@/components/AdminSong"
+import AdminShort from "@/components/AdminShort"
 
 export default function AdminPage() {
+	const [confirmation, setConfirmation] = useState(false)
+	const [tab, setTab] = useState("Song")
+	const { data: session, status } = useSession()
+
+	async function getPermissions() {
+		const res = await getUserPermissions(session?.user?.email!)
+		if (res.status != 200) {
+			console.error(res.body)
+		}
+		setConfirmation(true)
+		console.log("User is an admin")
+	}
+
+	useEffect(() => {
+		if (!session?.user) {
+			console.log("loading")
+			return
+		}
+		if (!session?.user.email) {
+			return
+		}
+		getPermissions()
+	},[status])
+
 	return (
-		<main>
-			<h1>This is the admin page</h1>
+		<main className="w-full h-full flex">
+			<nav className="w-full flex fixed bottom-0 max-w-[1000px] right-1/2 translate-x-1/2">
+				<button onClick={() => setTab("Song")} className={`${tab == "Song" ? "bg-blue-400" : ""} p-4 grow hover:bg-blue-400 transition-all`}>Song</button>
+				<button onClick={() => setTab("Movie")} className={`${tab == "Movie" ? "bg-blue-400" : ""} p-4 grow hover:bg-blue-400 transition-all`}>Movie</button>
+				<button onClick={() => setTab("Short")} className={`${tab == "Short" ? "bg-blue-400" : ""} p-4 grow hover:bg-blue-400 transition-all`}>Short Film</button>
+			</nav>
+			<section className="w-full h-full flex justify-center items-center">
+				{tab == "Song" && <AdminSong />}
+				{tab == "Movie" && <AdminMovie />}
+				{tab == "Short" && <AdminShort />}
+			</section>
 		</main>
 	)
 }
