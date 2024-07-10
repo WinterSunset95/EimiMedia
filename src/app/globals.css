@@ -12,7 +12,6 @@
   --text: #fff;
   --button: linear-gradient(90deg, #6871F5 0%, #9E61FF 100%);
   --highlight: #7B61FF;
-
 }
 
 @media (prefers-color-scheme: dark) {
@@ -27,6 +26,10 @@
 	box-sizing: border-box;
 	font-family: 'Montserrat', sans-serif;
 	color: var(--text);
+}
+
+.theme-bg-blur {
+	background-color: rgba(var(--background-start-rgb), 0.8);
 }
 
 .theme-bg {

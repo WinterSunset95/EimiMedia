@@ -4,7 +4,6 @@
 
 'use client'
 import { useState, useEffect } from 'react'
-import { movieUpload } from '@/lib/admin'
 
 export default function AdminShort() {
 	return (

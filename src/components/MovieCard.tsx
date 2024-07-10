@@ -9,7 +9,7 @@ export default function MovieCard(props: { data?: MovieResult[], carousel: boole
 	}
 
 	const Results = props.data.map((movie, index) => (
-		<a href={`/movie/${movie.id}`} className={`${props.carousel ? "" : "w-full"} flex flex-col gap-2 snap-center md:snap-start snap-mandatory transition-all hover:scale-105`} key={index}>
+		<a href={`/movie/${movie.movieId}`} className={`${props.carousel ? "" : "w-full"} flex flex-col gap-2 snap-center md:snap-start snap-mandatory transition-all hover:scale-105`} key={index}>
 			<div className={`${props.carousel ? "w-[15rem]" : "w-full"} aspect-[2/3] overflow-hidden rounded-md`}>
 				<img className="w-full h-full object-cover" src={movie.poster} alt={movie.title} />
 			</div>

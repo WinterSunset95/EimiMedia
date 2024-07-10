@@ -1,10 +1,46 @@
 'use server'
 import { docClient } from "./db"
-import { GetCommand } from "@aws-sdk/lib-dynamodb"
+import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb"
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
+import type { MovieResult } from "./interfaces"
+import { fromIni } from "@aws-sdk/credential-providers"
 
-export const movieUpload = async (movie: any) => {
-	console.log("Uploading movie to the database")
+export const addMovieToDatabase = async (movie: MovieResult) => {
 	console.log(movie)
+	const command = new PutCommand({
+		TableName: "EimiListedMovies",
+		Item: movie
+	})
+	return docClient.send(command)
+}
+
+export const getImageUploadUrl = async (key:string) => {
+	const client = new S3Client({
+		credentials: fromIni(),
+		region: process.env.AWS_REGION
+	})
+	const command = new PutObjectCommand({
+		Bucket: process.env.S3_BUCKET!,
+		Key: `image/${key}.jpg`,
+		ContentType: "image/jpeg",
+		ACL: "public-read"
+	})
+	return getSignedUrl(client, command, { expiresIn: 600 })
+}
+
+export const getMovieUploadUrl = async (key:string) => {
+	const client = new S3Client({
+		credentials: fromIni(),
+		region: process.env.AWS_REGION
+	})
+	const command = new PutObjectCommand({
+		Bucket: process.env.S3_BUCKET!,
+		Key: `movie/${key}.mp4`,
+		ContentType: "video/mp4",
+		ACL: "public-read"
+	})
+	return getSignedUrl(client, command, { expiresIn: 3600 })
 }
 
 export const getUserPermissions = async (email: string) => {

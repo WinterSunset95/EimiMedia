@@ -15,7 +15,7 @@ export interface FeaturedMovie<T> {
 }
 
 export type MovieResult = {
-	id: string;
+	movieId: string;
 	title: string;
 	poster: string;
 	price: number;

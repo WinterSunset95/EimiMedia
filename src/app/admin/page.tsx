@@ -31,14 +31,23 @@ export default function AdminPage() {
 		getPermissions()
 	},[status])
 
+	if (!confirmation) {
+		return (
+			<main className="w-full h-full flex justify-center items-center">
+				<h1>You do not have permissions to view this page</h1>
+				<a href="/">Go back to home page</a>
+			</main>
+		)
+	}
+
 	return (
-		<main className="w-full h-full flex">
+		<main className="w-full h-full overflow-scroll">
 			<nav className="w-full flex fixed bottom-0 max-w-[1000px] right-1/2 translate-x-1/2">
 				<button onClick={() => setTab("Song")} className={`${tab == "Song" ? "bg-blue-400" : ""} p-4 grow hover:bg-blue-400 transition-all`}>Song</button>
 				<button onClick={() => setTab("Movie")} className={`${tab == "Movie" ? "bg-blue-400" : ""} p-4 grow hover:bg-blue-400 transition-all`}>Movie</button>
 				<button onClick={() => setTab("Short")} className={`${tab == "Short" ? "bg-blue-400" : ""} p-4 grow hover:bg-blue-400 transition-all`}>Short Film</button>
 			</nav>
-			<section className="w-full h-full flex justify-center items-center">
+			<section className="w-full flex justify-center items-center">
 				{tab == "Song" && <AdminSong />}
 				{tab == "Movie" && <AdminMovie />}
 				{tab == "Short" && <AdminShort />}

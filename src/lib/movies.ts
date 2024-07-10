@@ -51,7 +51,7 @@ export async function getLatestMovies(): Promise<MovieResult[] | Error> {
 		const tmdbResults = data.results;
 		tmdbResults.forEach((movie:any) => {
 			let movieData: MovieResult = {
-				id: movie.id,
+				movieId: movie.id,
 				title: movie.title,
 				year: movie.release_date,
 				poster: `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`,
@@ -85,7 +85,7 @@ export async function getMovieDetails(movieId: string): Promise<MovieResult | un
 		let movieHours = Math.floor(data.runtime/60);
 		let movieMinutes = data.runtime % 60;
 		const movie: MovieResult = {
-			id: data.id,
+			movieId: data.id,
 			title: data.original_title,
 			poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
 			year: data.release_date,
@@ -148,7 +148,7 @@ export async function movieSearch(query: string): Promise<MovieResult[]> {
 
 		data.results.forEach((movie: any) => {
 			let movieData: MovieResult = {
-				id: movie.id,
+				movieId: movie.id,
 				title: movie.original_title,
 				year: movie.release_date,
 				poster: `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`,
