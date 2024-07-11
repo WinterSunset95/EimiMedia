@@ -1,6 +1,14 @@
-// Code: Admin Movie Page
+// Name: AdminMovie.tsx
+// Type: Component
 // Description: Form to upload movie to s3 bucket and store movie details in dynamoDB
-// Called by: /admin/Admin.tsx
+// Arguments: None
+// Calls:
+// - addMovieToDatabase - Function to add movie to database				|
+// - getImageUploadUrl - Function to get signed url for image upload	| admin.ts
+// - getMovieUploadUrl - Function to get signed url for movie upload	|
+// - Progress.tsx
+// Called by: /admin/page.tsx
+// Last modified: 12/07/2024, 01:18
 
 'use client'
 import type { MovieResult, Person } from '@/lib/interfaces'

@@ -1,3 +1,14 @@
+// Name: MovieCard.tsx
+// Type: Component
+// Description: Renders a list of movies that can be used in a carousel or a grid
+// Arguments:
+// - data: MovieResult[] - An array of movie objects
+// - carousel: boolean - A boolean value to determine if the list is a carousel or a grid
+// Calls: None
+// Called by:
+// - CarouselList.tsx
+// - GridList.tsx
+// Last modified: 12/07/2024, 01:00
 import type { MovieResult } from "@/lib/interfaces";
 
 export default function MovieCard(props: { data?: MovieResult[], carousel: boolean }) {

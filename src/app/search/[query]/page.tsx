@@ -1,5 +1,7 @@
 'use client'
 import type { MovieResult } from "@/lib/interfaces"
+import type { Metadata } from "next"
+import Head from "next/head"
 import { useState, useEffect } from "react"
 import GridList from "@/components/GridList"
 import Nav from "@/components/Nav"
@@ -30,11 +32,16 @@ export default function Search({ params }: { params: {query: string} }) {
 	}
 
 	return (
+		<>
+		<Head>
+			<title>Search</title>
+		</Head>
 		<main className="w-full h-full relative overflow-scroll">
 			<Nav />
 			<h1 className="font-bold text-4xl mt-24 p-6">Welcome to the search page</h1>
 			<GridList data={movies} />
 			<Footer />
 		</main>
+		</>
 	)
 }

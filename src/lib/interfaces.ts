@@ -1,4 +1,6 @@
-import { type } from "os";
+// Name: interfaces.ts
+// Description: Define the interfaces and types used in the project. Type safety is important.
+// Last modified: 12/7/2024, 00:45
 
 export interface Person {
 	name: string;
@@ -27,6 +29,7 @@ export type MovieResult = {
 	crew?: Person[];
 	rating?: string;
 	reviewers?: number;
+	streamingLink?: string;
 }
 
 export interface User {
@@ -40,6 +43,7 @@ export interface User {
 }
 
 export interface Error {
+	error: boolean;
 	message: string;
 }
 

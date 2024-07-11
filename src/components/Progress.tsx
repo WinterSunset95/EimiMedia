@@ -1,3 +1,12 @@
+// Name: Progress
+// Type: Component
+// Description: Displays a fullscreen progress page
+// Arguments:
+// - progress: number - The progress percentage
+// Calls: None
+// Called by:
+// - AdminMovie.tsx
+// Last modified: 12/07/2024, 01:15
 
 export default function Progress(props: { progress: number }) {
 	return (

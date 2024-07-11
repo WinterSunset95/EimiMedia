@@ -1,8 +1,12 @@
+// Name: ReviewForm.tsx
 // Type: Component
 // Description: Form to submit a review for a movie
-// Arguments: 1. movieId: string
-// Called in: MovieDetails.tsx
+// Arguments:
+// - movieId: string
 // Calls: None
+// Called by:
+// - MovieDetails.tsx
+// Last modified: 12/07/2024, 01:09
 
 import { useEffect, useState, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

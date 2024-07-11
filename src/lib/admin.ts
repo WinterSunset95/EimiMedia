@@ -1,3 +1,6 @@
+// Name: admin.ts
+// Description: Server functions for the admin page
+// Last modified: 12/7/2024, 00:38
 'use server'
 import { docClient } from "./db"
 import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb"
@@ -6,6 +9,9 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import type { MovieResult } from "./interfaces"
 import { fromIni } from "@aws-sdk/credential-providers"
 
+// Add a movie to the dynamodb database
+// Called from:
+// - components/AdminMovie.tsx
 export const addMovieToDatabase = async (movie: MovieResult) => {
 	console.log(movie)
 	const command = new PutCommand({
@@ -15,6 +21,9 @@ export const addMovieToDatabase = async (movie: MovieResult) => {
 	return docClient.send(command)
 }
 
+// Get a signed URL for uploading an image to S3
+// Called from:
+// - components/AdminMovie.tsx
 export const getImageUploadUrl = async (key:string) => {
 	const client = new S3Client({
 		credentials: fromIni(),
@@ -29,6 +38,9 @@ export const getImageUploadUrl = async (key:string) => {
 	return getSignedUrl(client, command, { expiresIn: 600 })
 }
 
+// Get a signed URL for uploading a movie to S3
+// Called from:
+// - components/AdminMovie.tsx
 export const getMovieUploadUrl = async (key:string) => {
 	const client = new S3Client({
 		credentials: fromIni(),
@@ -43,8 +55,10 @@ export const getMovieUploadUrl = async (key:string) => {
 	return getSignedUrl(client, command, { expiresIn: 3600 })
 }
 
+// Check if the user is an admin. For the admin page
+// Called from:
+// - admin/page.tsx
 export const getUserPermissions = async (email: string) => {
-	'use server'
 	// Look up the user in the database
 	const command = new GetCommand({
 		TableName: "EimiMediaUsers",

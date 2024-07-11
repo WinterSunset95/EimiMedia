@@ -1,10 +1,19 @@
+// Name: MovieWatch.tsx
+// Type: Component
+// Description: Displays the movie player
+// Arguments:
+// - movieDetails: MovieResult - The movie object
+// - permissions: boolean - Whether the user has permission to watch the movie
+// Calls: None
+// Called by:
+// - /movie/[movieId]/page.tsx
+// Last modified: 12/07/2024, 01:14
 import { useState } from "react";
 import "./MovieWatch.css"
+import { MovieResult } from "@/lib/interfaces";
 
-// This page is temporary. It only gets embeds from the movieId and displays it.
-// The final version will have a player and get its own data from the API.
-export default function MovieWatch(props: {movieId: string, permissions: boolean}) {
-	const [source, setSource] = useState<string>("vidsrc")
+export default function MovieWatch(props: {movieDetails: MovieResult, permissions: boolean}) {
+	const [source, setSource] = useState<string>("vidsrcvip")
 
 	const Paywall = () => {
 		return (
@@ -28,10 +37,16 @@ export default function MovieWatch(props: {movieId: string, permissions: boolean
 			)
 		}
 
+		if (props.movieDetails.streamingLink) {
+			return (
+				<video src={props.movieDetails.streamingLink} controls></video>
+			)
+		}
+
 		if (source === "vidsrc") {
 			return (
 				<iframe title="Watch"
-				src={`https://vidsrc.icu/embed/movie/${props.movieId}`}
+				src={`https://vidsrc.icu/embed/movie/${props.movieDetails.movieId}`}
 				referrerPolicy="origin"
 				allowFullScreen
 				width="1000"
@@ -42,7 +57,7 @@ export default function MovieWatch(props: {movieId: string, permissions: boolean
 		} else if (source === "vidsrcvip") {
 			return (
 				<iframe title="Watch"
-				src={`https://vidsrc.vip/embed/movie/${props.movieId}`}
+				src={`https://vidsrc.vip/embed/movie/${props.movieDetails.movieId}`}
 				referrerPolicy="origin"
 				allowFullScreen
 				width="1000"
@@ -53,7 +68,7 @@ export default function MovieWatch(props: {movieId: string, permissions: boolean
 		} else if (source === "vidsrcpro") {
 			return (
 				<iframe title="Watch"
-				src={`https://vidsrc.pro/embed/movie/${props.movieId}`}
+				src={`https://vidsrc.pro/embed/movie/${props.movieDetails.movieId}`}
 				referrerPolicy="origin"
 				allowFullScreen
 				width="1000"
@@ -64,7 +79,7 @@ export default function MovieWatch(props: {movieId: string, permissions: boolean
 		} else if (source === "vidsrcin") {
 			return (
 				<iframe title="Watch"
-				src={`https://vidsrc.in/embed/movie/${props.movieId}`}
+				src={`https://vidsrc.in/embed/movie/${props.movieDetails.movieId}`}
 				referrerPolicy="origin"
 				allowFullScreen
 				width="1000"
@@ -75,7 +90,7 @@ export default function MovieWatch(props: {movieId: string, permissions: boolean
 		} else if (source === "superembed") {
 			return (
 				<iframe title="Watch"
-				src={`https://multiembed.mov/?video_id=${props.movieId}&tmdb=1`}
+				src={`https://multiembed.mov/?video_id=${props.movieDetails.movieId}&tmdb=1`}
 				referrerPolicy="origin"
 				allowFullScreen
 				width="1000"
@@ -90,6 +105,7 @@ export default function MovieWatch(props: {movieId: string, permissions: boolean
 		<div className="w-full h-full flex flex-col items-center gap-4 relative">
 			{!props.permissions && <Paywall />}
 			<Embeds />
+			{!props.movieDetails.streamingLink &&
 			<select className="theme-button" value={source} onChange={(e) => setSource(e.target.value)} name="Sources" id="source">
 				<option value="vidsrc">VidSrc</option>
 				<option value="vidsrcvip">VidSrc VIP</option>
@@ -97,6 +113,7 @@ export default function MovieWatch(props: {movieId: string, permissions: boolean
 				<option value="vidsrcin">VidSrc In</option>
 				<option value="superembed">SuperEmbed</option>
 			</select>
+			}
 		</div>
 	)
 }

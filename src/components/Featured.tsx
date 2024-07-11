@@ -1,3 +1,12 @@
+// Name: Featured.tsx
+// Type: Component
+// Description: Displays the featured movie(s) as a carousel on the screen
+// Arguments: None
+// Calls:
+// - getFeaturedMovie() from movies.ts
+// Called by:
+// - /page.tsx
+// Last modified: 12/07/2024, 00:58
 import type { FeaturedMovie, Person, Error } from "../lib/interfaces"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlay } from "@fortawesome/free-solid-svg-icons"

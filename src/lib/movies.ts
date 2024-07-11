@@ -1,10 +1,15 @@
-// Type: Service
-// Description: This file contains the service for movies.
+// Name: movies.ts
+// Description: Server functions for handling movies data like fetching, searching, etc.
+// Last modified: 12/7/2024, 00:52
+'use server'
 
 import type { MovieResult, FeaturedMovie, Person, Error } from "./interfaces";
-//import { secret } from "@aws-amplify/backend";
+import { docClient } from "./db";
+import { GetItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
 
-// Takes no arguments
+// Get the featured movie(s) from the database
+// Called from:
+// - components/Featured.tsx
 export async function getFeaturedMovie(): Promise<FeaturedMovie<Person>> {
 	// The following block is a placeholder code. It will be changed to our own implementation later.
 	let data: FeaturedMovie<Person> = {
@@ -34,19 +39,44 @@ export async function getFeaturedMovie(): Promise<FeaturedMovie<Person>> {
 	return data;
 }
 
-// Takes no arguments
-// Returns a promise that resolves to a Movie<Person[]>
-export async function getLatestMovies(): Promise<MovieResult[] | Error> {
-	let error: Error = { message: "An error occurred." };
+// Get the latest movies from dynamodb
+// Called from: components/Latest.tsx
+export async function getLatestMovies(): Promise<MovieResult[] | undefined> {
+	console.log("getLatestMovies")
+	let error: Error = { error: true, message: "An error occurred." };
 	
 	let returnMovies: MovieResult[] = [];
 
+	// Lets make our own implementation too
+	const command = new ScanCommand({
+		TableName: "EimiListedMovies",
+	})
+	const commandRes = await docClient.send(command)
+	if (!commandRes.Items) {
+		error.error = true
+		error.message = "command failed"
+	}
+	commandRes.Items?.map((item, index) => {
+		const toAppend: MovieResult = {
+			movieId: item.movieId.S!,
+			title: item.title.S!,
+			year: parseInt(item.year.N!),
+			poster: `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/image/${item.poster.S}.jpg`,
+			length: item.length.S,
+			genres: item.genres.SS,
+			synopsis: item.synopsis.S,
+			price: parseInt(item.price.N!),
+			cast: item.cast.$unknown! as Person[]
+		}
+		returnMovies.push(toAppend)
+	})
+
 	// Anything from this block is a placeholder. It will be changed to our own implementation later.
 	try {
-		let res = await fetch("https://api.themoviedb.org/3/trending/movie/day?api_key=efe0d01423f29d0dd19e4a7e482b217b");
+		let res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.themoviedb.org/3/trending/movie/day?api_key=efe0d01423f29d0dd19e4a7e482b217b')}`);
 		let data = await res.json();
 		if (!data.results) {
-			return error;
+			return undefined;
 		}
 		const tmdbResults = data.results;
 		tmdbResults.forEach((movie:any) => {
@@ -66,7 +96,7 @@ export async function getLatestMovies(): Promise<MovieResult[] | Error> {
 
 		console.log(returnMovies);
 	} catch (err) {
-		return error;
+		return undefined;
 	}
 	// End of placeholder
 
@@ -75,12 +105,16 @@ export async function getLatestMovies(): Promise<MovieResult[] | Error> {
 
 // Takes ID of a movie as an argument
 // Returns a promise that resolves to a MovieDetails
+// Called from: components/MovieDetails.tsx
 export async function getMovieDetails(movieId: string): Promise<MovieResult | undefined> {
 	try {
 		const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=efe0d01423f29d0dd19e4a7e482b217b`)
 		const data = await res.json();
 		if (!data) {
-			return undefined;
+			throw new Error("Movie not found");
+		}
+		if (!data.id) {
+			throw new Error("Movie not found");
 		}
 		let movieHours = Math.floor(data.runtime/60);
 		let movieMinutes = data.runtime % 60;
@@ -133,10 +167,42 @@ export async function getMovieDetails(movieId: string): Promise<MovieResult | un
 		return movie;
 	} catch (err) {
 		console.log(err);
-		return undefined;
 	}
+
+	const command = new GetItemCommand({
+		TableName: "EimiListedMovies",
+		Key: {
+			movieId: { S: movieId }
+		}
+	})
+
+	const commandRes = await docClient.send(command)
+	if (!commandRes.Item) {
+		return undefined
+	}
+
+	const item = commandRes.Item
+	const movie: MovieResult = {
+		movieId: item.movieId.S!,
+		title: item.title.S!,
+		poster: `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/image/${item.poster.S}.jpg`,
+		year: item.year.N ? parseInt(item.year.N) : undefined,
+		length: item.length.S,
+		genres: item.genres.SS,
+		synopsis: item.synopsis.S,
+		cast: [ ],
+		crew: [ ],
+		rating: item.rating.S ,
+		price: parseInt(item.price.N!)*100,
+		reviewers: parseInt(item.reviewers.N!),
+		streamingLink: `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/movie/${item.movieId.S}.mp4`
+	}
+
+	return movie;
 }
 
+// Search for movies using the TMDB API
+// Called from: search/[query]/page.tsx
 export async function movieSearch(query: string): Promise<MovieResult[]> {
 	const movies: MovieResult[] = [];
 	try {

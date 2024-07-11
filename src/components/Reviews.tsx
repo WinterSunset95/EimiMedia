@@ -1,8 +1,12 @@
+// Name: Reviews.tsx
 // Type: Component
 // Description: Displays reviews for a movie
-// Arguments: 1. movieId: string
-// Called in: MovieDetails.tsx
+// Arguments:
+// - movieId: string
 // Calls: None
+// Called in:
+// - MovieDetails.tsx
+// Last modified: 12/07/2024, 01:10
 
 export default function Reviews(props: {movieId: string}) {
 	return (

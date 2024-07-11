@@ -5,9 +5,12 @@ import MovieDetails from "@/components/MovieDetails"
 import Footer from "@/components/Footer"
 import { useSession } from "next-auth/react"
 import { useState, useEffect } from "react"
+import { MovieResult } from "@/lib/interfaces"
+import { getMovieDetails } from "@/lib/movies"
 
 export default function MoviePage({ params }: { params: {movieId: string}} ) {
 	const [permitted, setPermitted] = useState<boolean>(false)
+	const [details, setDetails] = useState<MovieResult>()
 	const { data: session, status } = useSession()
 
 	async function checkPermissions() {
@@ -42,6 +45,20 @@ export default function MoviePage({ params }: { params: {movieId: string}} ) {
 		}
 	}
 
+	async function initialLoad() {
+		const data = await getMovieDetails(params.movieId)
+		if (!data) {
+			console.error("Error fetching movie details")
+			return
+		}
+		console.log(data)
+		setDetails(data)
+	}
+
+	useEffect(() => {
+		initialLoad()
+	}, [])
+
 	useEffect(() => {
 		checkPermissions()
 	}, [status])
@@ -51,9 +68,9 @@ export default function MoviePage({ params }: { params: {movieId: string}} ) {
 			<Nav />
 
 			<section className="mt-20 p-6 flex flex-col gap-12">
-				<MovieWatch movieId={params.movieId} permissions={permitted} />
+				{details && <MovieWatch movieDetails={details} permissions={permitted} /> }
 				<hr className="w-full" />
-				<MovieDetails movieId={params.movieId} permissions={permitted} />
+				<MovieDetails movieDetails={details} permissions={permitted} />
 			</section>
 
 			<Footer />

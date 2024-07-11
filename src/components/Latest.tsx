@@ -1,19 +1,24 @@
-import type { MovieResult, Error } from "../lib/interfaces"
+// Name: Latest.tsx
+// Type: Component
+// Description: Displays a list of the latest movies in a carousel
+// Calls:
+// - getLatestMovies() from movies.ts
+// - CarouselList.tsx
+// Called by:
+// - MovieDetails.tsx
+// - /page.tsx
+// Last modified: 12/07/2023, 00:57
+import type { MovieResult } from "../lib/interfaces"
 import { useState, useEffect } from "react"
 import { getLatestMovies } from "../lib/movies"
 import CarouselList from "./CarouselList"
 
 export default function Latest() {
-	const [latest, setLatest] = useState<MovieResult[]>()
-	const [error, setError] = useState<Error>()
+	const [latest, setLatest] = useState<MovieResult[] | undefined>()
 
 	async function initialLoad() {
 		const data = await getLatestMovies()
-		if (data instanceof Error) {
-			setError(data)
-		} else if (data instanceof Array) {
-			setLatest(data)
-		}
+		setLatest(data)
 	}
 
 	useEffect(() => {
@@ -24,20 +29,11 @@ export default function Latest() {
 		console.log(latest)
 	}, [latest])
 
-	// In case of error
-	if (error) {
-		return (
-			<main>
-				<h1>{error.message}</h1>
-			</main>
-		)
-	}
-
 	// While the page is loading
 	if (!latest) {
 		return (
 			<main>
-				<h1>Loading</h1>
+				<h1>Loading . . .</h1>
 			</main>
 		)
 	}
