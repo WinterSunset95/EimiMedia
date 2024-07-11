@@ -1,3 +1,9 @@
+// Name: Nav.tsx
+// Type: Component
+// Description: Navigation bar for the website
+// Arguments: None
+// Calls: None
+// Last modified: 12/07/2024, 01:21
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
