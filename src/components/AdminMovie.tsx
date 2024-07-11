@@ -119,8 +119,8 @@ export default function AdminMovie() {
 			movie.cast?.push(toAppend)
 		})
 
-		const movieUpload = await getMovieUploadUrl(randomId)
-		if (!movieUpload) throw new Error('Failed to get signed url for movie upload')
+		const movieUploadSignedUrl = await getMovieUploadUrl(randomId)
+		if (!movieUploadSignedUrl) throw new Error('Failed to get signed url for movie upload')
 		const movieLength = movieFile?.size
 		const xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = () => {
@@ -150,14 +150,15 @@ export default function AdminMovie() {
 			}
 			console.log('Progress event')
 		})
-		xhr.open('PUT', movieUpload, true)
-		xhr.setRequestHeader('Content-Type', 'multipart/form-data')
-		const formData = new FormData()
-		if (!movieFileRef.current) throw new Error('No movie file selected')
-		formData.append('file', movieFileRef.current.files![0])
-		console.log(formData)
-		console.log(movieUpload)
-		xhr.send(formData)
+		xhr.open('PUT', movieUploadSignedUrl, true)
+		xhr.setRequestHeader('Content-Type', movieFile!.type)
+		xhr.setRequestHeader('X-File-Size', movieLength!.toString())
+		//const formData = new FormData()
+		//if (!movieFileRef.current) throw new Error('No movie file selected')
+		//formData.append('file', movieFileRef.current.files![0])
+		//console.log(formData)
+		console.log(movieUploadSignedUrl)
+		xhr.send(movieFile!)
 	}
 
 	return (

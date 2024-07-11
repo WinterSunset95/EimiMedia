@@ -33,9 +33,9 @@ export default function AdminPage() {
 
 	if (!confirmation) {
 		return (
-			<main className="w-full h-full flex justify-center items-center">
+			<main className="w-full h-full flex flex-col gap-2 justify-center items-center">
 				<h1>You do not have permissions to view this page</h1>
-				<a href="/">Go back to home page</a>
+				<a href="/" className="hover:theme-highlight underlined">Go back to home page</a>
 			</main>
 		)
 	}
