@@ -1,4 +1,4 @@
-import { razorpayInstance } from "@/lib/razorpay";
+import { razorpayInstance } from "@/lib/razorpayinit";
 import { validatePaymentVerification as validatePayment } from "razorpay/dist/utils/razorpay-utils";
 import { NextRequest, NextResponse } from "next/server";
 

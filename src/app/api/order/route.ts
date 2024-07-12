@@ -1,5 +1,5 @@
 import type { RazorPayOrderResponse, RazorPayOrderError } from "@/lib/interfaces";
-import { razorpayInstance } from "@/lib/razorpay";
+import { razorpayInstance } from "@/lib/razorpayinit";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {

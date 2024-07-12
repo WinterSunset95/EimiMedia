@@ -1,14 +1,8 @@
 // Name: razorpay.ts
-// Description: Initialize the Razorpay instance and show the Razorpay payment form
+// Description:  the Razorpay instance and show the Razorpay payment form
 // Last modified: 12/7/2024, 00:48
-import Razorpay from 'razorpay';
-import { Orders } from "razorpay/dist/types/orders";
 import { loadJavaScript } from './helpers';
-
-export const razorpayInstance = new Razorpay({
-	key_id: process.env.RAZORPAY_KEY_ID!,
-	key_secret: process.env.RAZORPAY_KEY_SECRET!
-})
+import { Orders } from "razorpay/dist/types/orders";
 
 export async function showRazorPay(order: Orders.RazorpayOrder, url: string) {
 	let response = await loadJavaScript("https://checkout.razorpay.com/v1/checkout.js");
