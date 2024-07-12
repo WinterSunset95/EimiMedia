@@ -76,7 +76,7 @@ export async function getLatestMovies(): Promise<MovieResult[] | undefined> {
 		let res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.themoviedb.org/3/trending/movie/day?api_key=efe0d01423f29d0dd19e4a7e482b217b')}`);
 		let data = await res.json();
 		if (!data.results) {
-			return undefined;
+			console.error("no results found")
 		}
 		const tmdbResults = data.results;
 		tmdbResults.forEach((movie:any) => {
@@ -96,7 +96,7 @@ export async function getLatestMovies(): Promise<MovieResult[] | undefined> {
 
 		console.log(returnMovies);
 	} catch (err) {
-		return undefined;
+		console.error("Unidentified error", err)
 	}
 	// End of placeholder
 

@@ -170,7 +170,6 @@ export default function MovieDetails(props: {movieDetails: MovieResult | undefin
 
 				</div>
 			</div>
-
 		</section>
 	)
 }
