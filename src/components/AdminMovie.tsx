@@ -8,7 +8,7 @@
 // - getMovieUploadUrl - Function to get signed url for movie upload	|
 // - Progress.tsx
 // Called by: /admin/page.tsx
-// Last modified: 12/07/2024, 01:18
+// Last modified: 12/07/2024, 22:30
 
 'use client'
 import type { MovieResult, Person } from '@/lib/interfaces'
@@ -82,6 +82,7 @@ export default function AdminMovie() {
 
 	async function submitForm(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault()
+		setUploading(true)
 		const randomId = Math.random().toString(36).substring(7)
 		const randomImageName = Math.random().toString(36).substring(7)
 		const signedImageUpload = await getImageUploadUrl(randomImageName);

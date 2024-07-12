@@ -43,7 +43,7 @@ export default function Featured() {
 				<div className="flex flex-row flex-wrap gap-2">
 					<span className="theme-highlight">Cast: </span>
 					{featured.cast.map((person, index) => (
-						<p>{person.name} as {person.role}, </p>
+						<p key={index}>{person.name} as {person.role}, </p>
 					))}
 				</div>
 				<div className="flex flex-row">

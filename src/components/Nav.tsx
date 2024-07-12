@@ -3,7 +3,7 @@
 // Description: Navigation bar for the website
 // Arguments: None
 // Calls: None
-// Last modified: 12/07/2024, 01:21
+// Last modified: 12/07/2024, 22:30
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,19 +15,31 @@ export default function Nav() {
 	const [query, setQuery] = useState("");
 	const [expanded, setExpanded] = useState(false);
 
-	function windowScroll(e:Event) {
-		console.log(document.body.scrollTop)
-		console.log("Scroll event")
+	let prevScrollTop = 0;
+	let iterationCount = 0
+	function windowScroll(e:any) {
+		if (iterationCount < 10) {
+			iterationCount++
+			return
+		}
+		iterationCount = 0
+		if (e.target.scrollTop > prevScrollTop) {
+			setNav(false)
+		} else {
+			setNav(true)
+		}
+		console.log(e.target.scrollTop, prevScrollTop)
+		prevScrollTop = e.target.scrollTop
 	}
 
 	useEffect(() => {
-		window.addEventListener('scroll', (e) => {
+		document.addEventListener('scroll', (e) => {
 			windowScroll(e)
-		})
+		}, true)
 	}, [])
 
 	return (
-		<nav className={`w-full flex flex-col md:flex-row ${expanded ? "gap-3" : "gap-0"} md:gap-6 justify-between items-center p-2 md:p-4 fixed top-0 right-0 z-40 theme-bg-secondary transition-all ${nav ? "" : "-translate-y-20"}`}>
+		<nav className={`w-full flex flex-col md:flex-row ${expanded ? "gap-3" : "gap-0"} md:gap-6 justify-between items-center p-2 md:p-4 fixed top-0 right-0 z-40 bg-transparent backdrop-blur-md transition-all ${nav ? "" : "-translate-y-20"}`}>
 			<div className="grow flex flex-row justify-between items-center w-full md:w-auto">
 				<h1 className="text-xl md:text-2xl font-bold"> <a href="/"> EimiMedia </a> </h1>
 				<ul className="grow md:grow-0 flex gap-2 md:gap-6 justify-center">
