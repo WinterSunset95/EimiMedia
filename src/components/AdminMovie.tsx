@@ -35,22 +35,14 @@ export default function AdminMovie() {
 	const [genres, setGenres] = useState<string[]>([])
 
 	// For cast and crew
-	const [cast, setCast] = useState<{
-		name: string,
-		image: Blob,
-		role: string
-	}[]>([])
+	const [cast, setCast] = useState<string[]>([])
 	const [uname, setUname] = useState<string>('')
-	const [uimage, setUimage] = useState<Blob>()
-	const [urole, setUrole] = useState<string>('')
 
 	function previewCast(e: FormEvent<HTMLFormElement>) {
 		console.log('uploading cast')
 		e.preventDefault()
-		if (!uimage) throw new Error('No image selected')
-		setCast([...cast, { name: uname, image: uimage, role: urole }])
+		setCast([...cast, uname])
 		setUname('')
-		setUrole('')
 	}
 
 	function addGenre(e: FormEvent<HTMLFormElement>) {
@@ -115,19 +107,6 @@ export default function AdminMovie() {
 			console.log("Poster image not available")
 		}
 
-		// Next lets upload every image in 'cast'
-		cast.forEach(async (person) => {
-			const randomImageIdForCastMember = Math.random().toString(36).substring(7)
-			const castMemberImageUploadRes = await upLoadImage(signedImageUpload, person.image, randomImageIdForCastMember)
-			if (castMemberImageUploadRes.error) throw new Error("Failed to upload cast member image")
-			const toAppend: Person = {
-				name: person.name,
-				image: randomImageIdForCastMember,
-				role: person.role
-			}
-			movie.cast?.push(toAppend)
-		})
-
 		const movieUploadSignedUrl = await getMovieUploadUrl(randomId)
 		if (!movieUploadSignedUrl) throw new Error('Failed to get signed url for movie upload')
 		const movieLength = movieFile?.size
@@ -178,28 +157,11 @@ export default function AdminMovie() {
 				<label htmlFor="cast" className='font-bold text-2xl'>Cast of movie</label>
 				<div className='flex flex-wrap gap-2'>
 				{cast.map((person, index) => (
-					<div key={index} className='flex flex-col justify-center items-center gap-2'>
-						<div className='w-16 h-16 rounded-full overflow-hidden'>
-							{person.image && <img className='w-full h-full object-cover' src={URL.createObjectURL(person.image)} alt="" /> }
-						</div>
-						<div>
-							<div>{person.name} as </div>
-							<div>{person.role}</div>
-						</div>
-					</div>
+					<div className='theme-button' key={index}>{person} as </div>
 				))}
 				</div>
 				<label htmlFor="name">Name</label>
 				<input type="text" id='name' value={uname} onChange={(e) => setUname(e.target.value)} required/>
-				<label htmlFor="image">Picture of cast member</label>
-				<input type="file" accept='.jpg' id='image' onChange={async (e) => {
-					if (!e.target.files) throw new Error('No files selected')
-					const file = e.target.files[0]
-					const blob = new Blob([file], { type: file.type })
-					setUimage(blob)
-				}} required/>
-				<label htmlFor="role">Role</label>
-				<input type="text" id='role' value={urole} onChange={(e) => setUrole(e.target.value)} required/>
 				<input className='theme-button' type="submit" value="Submit" />
 			</form>
 

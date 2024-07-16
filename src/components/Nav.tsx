@@ -28,7 +28,6 @@ export default function Nav() {
 		} else {
 			setNav(true)
 		}
-		console.log(e.target.scrollTop, prevScrollTop)
 		prevScrollTop = e.target.scrollTop
 	}
 

@@ -58,14 +58,14 @@ export default function ReviewForm(props: {movieId: string}) {
 			</div>
 			<h1 className='font-bold text-xl'>Your review</h1>
 			<textarea className='w-full h-32 theme-bg-secondary rounded-md' name="review" id="review"></textarea>
-			<div className='flex flex-row gap-8'>
-				<div className='flex flex-col grow gap-4'>
+			<div className='flex flex-row w-full justify-between'>
+				<div className='flex flex-col gap-4 w-[45%]'>
 					<h2>Name*</h2>
-					<input className='theme-bg-secondary border-none rounded-md p-2' type="text" name="name" id="name" placeholder='Enter your name'/>
+					<input className='w-full theme-bg-secondary border-none rounded-md p-2' type="text" name="name" id="name" placeholder='Name'/>
 				</div>
-				<div className='flex flex-col grow gap-4'>
+				<div className='flex flex-col gap-4 w-[45%]'>
 					<h2>Email*</h2>
-					<input className='theme-bg-secondary border-none rounded-md p-2' type="email" name="email" id="email" placeholder='Enter Email'/>
+					<input className='w-full theme-bg-secondary border-none rounded-md p-2' type="email" name="email" id="email" placeholder='Email'/>
 				</div>
 			</div>
 			<input type="submit" value="Submit" className='theme-button w-min' />

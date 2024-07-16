@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-	"doc": "npx typedoc --entryPointStrategy expand ./src/ --out ../EimiMediaDocs"
+    "doc": "npx typedoc --entryPointStrategy expand ./src/ --out ../EimiMediaDocs",
+	"test": "vitest"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.609.0",
@@ -39,6 +40,7 @@
     "tailwindcss": "^3.4.1",
     "typedoc": "^0.26.4",
     "typedoc-plugin-markdown": "^4.2.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^2.0.3"
   }
 }

@@ -6,7 +6,7 @@ import Footer from "@/components/Footer"
 import { useSession } from "next-auth/react"
 import { useState, useEffect } from "react"
 import { MovieResult } from "@/lib/interfaces"
-import { getMovieDetails } from "@/lib/movies"
+import { getMovieDetails, getMoviePermissions } from "@/lib/movies"
 
 export default function MoviePage({ params }: { params: {movieId: string}} ) {
 	const [permitted, setPermitted] = useState<boolean>(false)
@@ -14,35 +14,13 @@ export default function MoviePage({ params }: { params: {movieId: string}} ) {
 	const { data: session, status } = useSession()
 
 	async function checkPermissions() {
-		if (status != "authenticated") {
+		console.log(new Date().getTime())
+		if (status != "authenticated" || !session.user?.email) {
 			setPermitted(false)
 			return
 		}
-
-		const userEmail = session?.user?.email!
-		const res = await fetch(`/api/moviepermission`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({
-				email: userEmail,
-				movieId: params.movieId
-			})
-		})
-
-		try {
-			const data = await res.json() as {permission: string}
-			if (data.permission === "granted") {
-				setPermitted(true)
-			} else {
-				setPermitted(false)
-			}
-			console.log(data)
-		} catch (error) {
-			console.error(error)
-			setPermitted(false)
-		}
+		const moviePermissionsRes = await getMoviePermissions(params.movieId, session?.user?.email!)
+		setPermitted(moviePermissionsRes)
 	}
 
 	async function initialLoad() {

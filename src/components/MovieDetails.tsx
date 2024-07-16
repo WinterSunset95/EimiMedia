@@ -26,6 +26,7 @@ import Reviews from "./Reviews"
 import Loading from "./Loading"
 import { Orders } from "razorpay/dist/types/orders"
 import { INormalizeError } from "razorpay/dist/types/api"
+import { faShare, faThumbsDown } from "@fortawesome/free-solid-svg-icons"
 
 export default function MovieDetails(props: {movieDetails: MovieResult | undefined, permissions: boolean}) {
 	const [loading, setLoading] = useState<boolean>(false)
@@ -87,9 +88,18 @@ export default function MovieDetails(props: {movieDetails: MovieResult | undefin
 					<img className="w-full h-full object-cover" src={props.movieDetails.poster} alt={props.movieDetails.title} />
 				</div>
 				<div className="flex flex-row w-full gap-4">
-					<button className="theme-button w-1/3" >{props.movieDetails.rating}</button>
-					<button className="theme-button w-1/3" >Share</button>
-					<button className="theme-button w-1/3" >Watchlist</button>
+					<button className="theme-button w-1/3" >
+						<span>Like </span>
+						<FontAwesomeIcon icon={faThumbsUp} />
+					</button>
+					<button className="theme-button w-1/3" >
+						<span>Dislike </span>
+						<FontAwesomeIcon icon={faThumbsDown} />
+					</button>
+					<button className="theme-button w-1/3" >
+						<span>Share </span>
+						<FontAwesomeIcon icon={faShare} />
+					</button>
 				</div>
 				{status == "unauthenticated" ? 
 				<button className="theme-button w-full" onClick={() => signIn()}>SignIn to watch</button>
@@ -138,25 +148,19 @@ export default function MovieDetails(props: {movieDetails: MovieResult | undefin
 					</div>
 
 					<h2 className="font-bold text-2xl">Cast</h2>
-					<div className="flex flex-row gap-4 items-center">
+					<div className="flex flex-row flex-wrap gap-4 items-center">
 						{props.movieDetails.cast?.map((actor, index) => (
-							<div key={index} className="flex flex-col items-center">
-								<div className="w-24 aspect-square rounded-full overflow-hidden">
-									<img className="w-full h-full object-cover" src={actor.image} alt={actor.name} />
-								</div>
-								<span>{actor.name}</span>
+							<div key={index} className="theme-button">
+								{actor}
 							</div>
 						))}
 					</div>
 
 					<h2 className="font-bold text-2xl">Crew</h2>
-					<div className="flex flex-row gap-4 items-center">
+					<div className="flex flex-row gap-4 items-center flex-wrap">
 						{props.movieDetails.crew?.map((member, index) => (
-							<div key={index} className="flex flex-col items-center">
-								<div className="w-24 aspect-square rounded-full overflow-hidden">
-									<img className="w-full h-full object-cover" src={member.image} alt={member.name} />
-								</div>
-								<span>{member.name}</span>
+							<div key={index} className="theme-button">
+								{member}
 							</div>
 						))}
 					</div>

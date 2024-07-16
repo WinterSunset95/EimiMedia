@@ -29,7 +29,7 @@ export default function Featured() {
 
 	if (!featured) {
 		return (
-			<main className="">
+			<main className="w-full h-5/6 flex justify-center items-center z-30 backdrop-blur-lg">
 				<h1>Loading</h1>
 			</main>
 		)
@@ -38,7 +38,7 @@ export default function Featured() {
 	return (
 		<main className="w-full h-5/6 flex flex-col justify-center relative z-30">
 			<div className="flex flex-col justify-center gap-4 w-full h-full p-6 md:p-12 home-gradient">
-				<h1 className="text-2xl font-bold">{featured.title}</h1>
+				<h1 className="text-4xl font-bold">{featured.title}</h1>
 				<p>{featured.synopsis}</p>
 				<div className="flex flex-row flex-wrap gap-2">
 					<span className="theme-highlight">Cast: </span>

@@ -25,11 +25,24 @@ export type MovieResult = {
 	length?: string;
 	synopsis?: string;
 	genres?: string[];
-	cast?: Person[];
-	crew?: Person[];
+	cast?: string[];
+	crew?: string[];
 	rating?: string;
 	reviewers?: number;
 	streamingLink?: string;
+}
+
+export type Song = {
+	songId: string;
+	title: string;
+	artist: string;
+	album: string;
+	year: number;
+	duration: string;
+	genres: string[];
+	cover: string;
+	likes: number;
+	dislikes: number;
 }
 
 export interface User {
@@ -40,6 +53,8 @@ export interface User {
 	image: string;
 	groups: string[];
 	rentedMovies: string[];
+	likes?: string[];
+	dislikes?: string[];
 }
 
 export interface Error {

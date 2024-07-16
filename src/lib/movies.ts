@@ -5,7 +5,7 @@
 
 import type { MovieResult, FeaturedMovie, Person, Error } from "./interfaces";
 import { docClient } from "./db";
-import { GetItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
+import { AttributeValue, GetItemCommand, ScanCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 
 // Get the featured movie(s) from the database
 // Called from:
@@ -66,19 +66,20 @@ export async function getLatestMovies(): Promise<MovieResult[] | undefined> {
 			genres: item.genres.SS,
 			synopsis: item.synopsis.S,
 			price: parseInt(item.price.N!),
-			cast: item.cast.$unknown! as Person[]
+			cast: item.cast?.SS
 		}
 		returnMovies.push(toAppend)
 	})
 
 	// Anything from this block is a placeholder. It will be changed to our own implementation later.
 	try {
-		let res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.themoviedb.org/3/trending/movie/day?api_key=efe0d01423f29d0dd19e4a7e482b217b')}`);
+		let res = await fetch(`https://api.allorigins.win/get?url=https://api.themoviedb.org/3/trending/movie/day?api_key=efe0d01423f29d0dd19e4a7e482b217b`);
 		let data = await res.json();
-		if (!data.results) {
+		const contents = JSON.parse(data.contents);
+		if (!contents.results) {
 			console.error("no results found")
 		}
-		const tmdbResults = data.results;
+		const tmdbResults = contents.results;
 		tmdbResults.forEach((movie:any) => {
 			let movieData: MovieResult = {
 				movieId: movie.id,
@@ -93,10 +94,9 @@ export async function getLatestMovies(): Promise<MovieResult[] | undefined> {
 			};
 			returnMovies.push(movieData);
 		});
-
-		console.log(returnMovies);
 	} catch (err) {
-		console.error("Unidentified error", err)
+		console.log("An unknown error occured")
+		//console.error("Unidentified error in getLatestMovies", err);
 	}
 	// End of placeholder
 
@@ -126,47 +126,15 @@ export async function getMovieDetails(movieId: string): Promise<MovieResult | un
 			length: `${movieHours}h ${movieMinutes}m`,
 			genres: ["Unavailable"],
 			synopsis: data.overview,
-			cast: [
-				{
-					name: "Person 1",
-					role: "Character 1",
-					image: `https://image.tmdb.org/t/p/w500${data.poster_path}`
-				},
-				{
-					name: "Person 2",
-					role: "Character 2",
-					image: `https://image.tmdb.org/t/p/w500${data.poster_path}`
-				},
-				{
-					name: "Person 3",
-					role: "Character 3",
-					image: `https://image.tmdb.org/t/p/w500${data.poster_path}`
-				}
-			],
-			crew: [
-				{
-					name: "Person 1",
-					role: "Character 1",
-					image: `https://image.tmdb.org/t/p/w500${data.poster_path}`
-				},
-				{
-					name: "Person 2",
-					role: "Character 2",
-					image: `https://image.tmdb.org/t/p/w500${data.poster_path}`
-				},
-				{
-					name: "Person 3",
-					role: "Character 3",
-					image: `https://image.tmdb.org/t/p/w500${data.poster_path}`
-				}
-			],
+			cast: ["Person 1", "Person 2", "Person 3"],
+			crew: ["Person 1", "Person 2", "Person 3"],
 			rating: data.vote_average ? data.vote_average : 0,
 			price: 100,
 			reviewers: data.vote_count ? data.vote_count : 0
 		};
 		return movie;
 	} catch (err) {
-		console.log(err);
+		console.log("An unknown error occured in getMovieDetails")
 	}
 
 	const command = new GetItemCommand({
@@ -233,4 +201,70 @@ export async function movieSearch(query: string): Promise<MovieResult[]> {
 	} catch (err) {
 		return [];
 	}
+}
+
+// Get the permissions of a user for a movie
+// Called from: movie/[movieId]/page.tsx
+export async function getMoviePermissions(movieId: string, email: string): Promise<boolean> {
+	// Get the user's data
+	const command = new GetItemCommand({
+		TableName: "EimiMediaUsers",
+		Key: {
+			email: { S: email }
+		}
+	})
+
+	const commandRes = await docClient.send(command)
+
+	// If status code is not 200, the data fetching failed
+	if (commandRes.$metadata.httpStatusCode != 200) {
+		console.log("Error in getMoviePermissions")
+		return false;
+	}
+
+	// If no item is found, return false
+	if (!commandRes.Item) {
+		console.log("No item found in getMoviePermissions")
+		return false;
+	}
+
+	const rentedMovies = commandRes.Item.rentedMovies.M
+	// The user haven't rented any movies
+	if (!rentedMovies) return false;
+	console.log(rentedMovies)
+	if (!rentedMovies[`${movieId}`]) return false;
+	const rentedMovie = rentedMovies[`${movieId}`].N!
+	const currentTime = new Date().getTime()
+	const rentalTime = parseInt(rentedMovie)
+	if (currentTime - rentalTime > 3600000) {
+		return false;
+	}
+	console.log(new Date(currentTime), new Date(rentalTime))
+
+	// So the user has rented the movie
+	// Next we check if the rental period has expired, rental period is 1 hour
+
+	return true;
+}
+
+// Delete a movie from the from the rented movies list of a user
+// Called from: movies.ts
+export async function deleteRentedMovie(email: string, movieId: string): Promise<boolean> {
+	const query = new UpdateItemCommand({
+		TableName: "EimiMediaUsers",
+		Key: {
+			email: { S: email }
+		},
+		UpdateExpression: "REMOVE rentedMovies.#movieId",
+		ExpressionAttributeNames: {
+			"#movieId": movieId
+		}
+	})
+
+	const queryRes = await docClient.send(query)
+	if (queryRes.$metadata.httpStatusCode != 200) {
+		return false;
+	}
+
+	return true;
 }

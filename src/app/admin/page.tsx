@@ -42,7 +42,7 @@ export default function AdminPage() {
 
 	return (
 		<main className="w-full h-full overflow-scroll">
-			<nav className="w-full flex fixed bottom-0 max-w-[1000px] right-1/2 translate-x-1/2">
+			<nav className="w-full flex fixed bottom-0 max-w-[1000px] right-1/2 translate-x-1/2 theme-bg">
 				<button onClick={() => setTab("Song")} className={`${tab == "Song" ? "bg-blue-400" : ""} p-4 grow hover:bg-blue-400 transition-all`}>Song</button>
 				<button onClick={() => setTab("Movie")} className={`${tab == "Movie" ? "bg-blue-400" : ""} p-4 grow hover:bg-blue-400 transition-all`}>Movie</button>
 				<button onClick={() => setTab("Short")} className={`${tab == "Short" ? "bg-blue-400" : ""} p-4 grow hover:bg-blue-400 transition-all`}>Short Film</button>

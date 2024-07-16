@@ -9,15 +9,19 @@ export async function GET(req: NextRequest) {
 		return new Response(JSON.stringify("userEmail and movieId are required"), { status: 400 });
 	}
 
-	// Append to the user's rentedMovies list
+	// Append to the user's rentedMovies map with the current time as int
+	const currentTime = new Date().getTime();
 	const query = new UpdateItemCommand({
 		TableName: "EimiMediaUsers",
 		Key: {
 			email: { S: userEmail },
 		},
-		UpdateExpression: "SET rentedMovies = list_append(rentedMovies, :movieId)",
+		UpdateExpression: "ADD rentedMovies.#movieId :currentTime",
+		ExpressionAttributeNames: {
+			"#movieId": movieId,
+		},
 		ExpressionAttributeValues: {
-			":movieId": { L: [{ S: movieId }] },
+			":currentTime": { N: currentTime.toString() },
 		},
 	})
 
