@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ga+Maamli&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ga+Maamli&family=Permanent+Marker&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,11 +9,12 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-  --bg: #00031C;
-  --bg-secondary: #191C33;
+  --bg: #3F776E;
+  --bg-secondary: #353338;
   --text: #fff;
-  --button: linear-gradient(90deg, #6871F5 0%, #9E61FF 100%);
+  --button: linear-gradient(90deg, white 0%, rgb(200,200,200) 100%);
   --highlight: #7B61FF;
+  --highlight-secondary: #C9D80B;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,8 +27,24 @@
 
 * {
 	box-sizing: border-box;
-	font-family: 'Montserrat', sans-serif;
 	color: var(--text);
+}
+
+.montserrat {
+	font-family: 'Montserrat', sans-serif;
+}
+
+.gamaamli {
+	font-family: 'Ga Maamli', cursive;
+}
+
+.permanent-marker {
+	font-family: 'Permanent Marker', cursive;
+}
+
+.theme-highlight-secondary {
+	color: var(--highlight-secondary);
+	text-shadow: 0 0 3px black;
 }
 
 .theme-bg-blur {
@@ -48,7 +67,7 @@
 	border: none;
 	padding: 0.3rem 0.75rem;
 	background: var(--button);
-	border-radius: 0.5rem;
+	color: black;
 	cursor: pointer;
 	transition: all 0.3s;
 }

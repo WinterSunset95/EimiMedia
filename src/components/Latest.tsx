@@ -32,7 +32,7 @@ export default function Latest() {
 	// While the page is loading
 	if (!latest) {
 		return (
-			<main>
+			<main className="h-[50rem] w-full flex justify-center items-center backdrop-blur-lg">
 				<h1>Loading . . .</h1>
 			</main>
 		)
@@ -40,7 +40,7 @@ export default function Latest() {
 
 	return (
 		<div className="p-6">
-			<h1 className="my-4 font-bold text-4xl">Latest Movies</h1>
+			<h1 className="my-4 ml-8 font-bold text-4xl permanent-marker">Latest Movies</h1>
 			<CarouselList data={latest} />
 		</div>
 	)

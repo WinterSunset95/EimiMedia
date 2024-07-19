@@ -16,6 +16,7 @@ export async function getFeaturedMovie(): Promise<FeaturedMovie<Person>> {
 		id: "1",
 		title: "John Wick",
 		trailer: "https://customer-342mt1gy0ibqe0dl.cloudflarestream.com/728fa59bff4866b9aba6290b60ed0a63/downloads/default.mp4",
+		poster: "",
 		cast: [
 			{
 				name: "Keanu Reeves",
@@ -34,6 +35,33 @@ export async function getFeaturedMovie(): Promise<FeaturedMovie<Person>> {
 			}
 		],
 		synopsis: "An ex-hitman comes out of retirement to track down the gangsters that took everything from him."
+	}
+
+	const scanCommand = new ScanCommand({
+		TableName: "EimiMediaFeatured",
+	})
+
+	const commandRes = await docClient.send(scanCommand)
+	if (commandRes.$metadata.httpStatusCode != 200 || !commandRes.Items) {
+		console.log("Error in getFeaturedMovie")
+		return data;
+	}
+
+	const item = commandRes.Items[0]
+	const itemCast = item.cast.SS!
+	data = {
+		id: item.movieId.S!,
+		title: item.title.S!,
+		trailer: item.trailer.S,
+		poster: `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/featured/${item.poster.S}.jpeg`,
+		cast: itemCast.map((cast) => {
+			return {
+				name: cast,
+				role: "",
+				image: "https://image.tmdb.org/t/p/w185/4ynQYtSEuU5hyipcGkfD6ncwtwz.jpg"
+			}
+		}),
+		synopsis: item.synopsis.S!
 	}
 
 	return data;

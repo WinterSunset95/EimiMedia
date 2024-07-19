@@ -38,7 +38,7 @@ export default function Nav() {
 	}, [])
 
 	return (
-		<nav className={`w-full flex flex-col md:flex-row ${expanded ? "gap-3" : "gap-0"} md:gap-6 justify-between items-center p-2 md:p-4 fixed top-0 right-0 z-40 bg-transparent backdrop-blur-md transition-all ${nav ? "" : "-translate-y-20"}`}>
+		<nav className={`permanent-marker w-full flex flex-col md:flex-row ${expanded ? "gap-3" : "gap-0"} md:gap-6 justify-between items-center p-1 md:p-2 fixed top-0 right-0 z-40 theme-bg-secondary backdrop-blur-md transition-all ${nav ? "" : "-translate-y-20"}`}>
 			<div className="grow flex flex-row justify-between items-center w-full md:w-auto">
 				<h1 className="text-xl md:text-2xl font-bold"> <a href="/"> EimiMedia </a> </h1>
 				<ul className="grow md:grow-0 flex gap-2 md:gap-6 justify-center">
@@ -51,8 +51,8 @@ export default function Nav() {
 				</button>
 			</div>
 			<div className={`grow flex flex-row justify-between md:justify-end gap-6 items-center w-full md:w-auto md:h-full ${expanded ? "h-full" : "h-0 overflow-hidden" }`}>
-				<form action={`/search/${query}`} className="grow md:grow-0 md:w-1/2 flex flex-row gap-2 items-center border border-1 rounded-md">
-					<div className="p-2 md:p-4">
+				<form action={`/search/${query}`} className="grow md:grow-0 md:w-1/2 flex flex-row gap-2 items-center bg-black">
+					<div className="p-1 md:p-2">
 						<FontAwesomeIcon icon={faSearch} />
 					</div>
 					<input value={query} onChange={(e) => setQuery(e.target.value)} className="bg-transparent p-1 focus:outline-none" type="text" placeholder="Search"/>

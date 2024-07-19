@@ -11,7 +11,8 @@ export interface Person {
 export interface FeaturedMovie<T> {
 	id: string;
 	title: string;
-	trailer: string;
+	trailer?: string;
+	poster?: string;
 	cast: T[];
 	synopsis: string;
 }
